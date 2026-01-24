@@ -1,6 +1,6 @@
-.env
-
+git rm -r --cached venv
 venv/
 .venv/
-
-.vscode/
+__pycache__/
+*.py[cod]
+.env
