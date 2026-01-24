@@ -6,7 +6,8 @@ load_dotenv()
 
 app = FastAPI(
     titel = os.getenv("API_NAME" , "FastAPI APP"),
-    debug = os.getenv("DEBUG" , False)
+    debug = os.getenv("DEBUG" , False),
+    version="v1"
 )
 
 @app.get("/health")

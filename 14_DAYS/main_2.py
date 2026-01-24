@@ -11,6 +11,7 @@ from schemas import PredictionRequest , PredictionResponse
 
 load_dotenv() # To load  environment variable from.env file 
 
+# need fastapi for all endpoints
 app = FastAPI(
     title = os.getenv("API_NAME" , "FastAPI APP"),
     version="1.0.0",
@@ -25,7 +26,7 @@ def get_user(
     user_id: int = Path(
         ...,
         description="user ID to fetch",
-        gt=0 ,# must be positive
+        gt=0 ,# must be positive and geaterthan 0
         example = 123
     )
 ):
@@ -77,12 +78,7 @@ def search(
 # =========== Request Body (POSt) =============
 # health check endpoint  weather app is live or not
 
-@app.post(
-    "/predict",
-    response_model = PredictionResponse,
-    status_code = status.HTTP_200_OK
-)
-
+@app.post("/predict", response_model = PredictionResponse, status_code = status.HTTP_200_OK)
 def predict(request: PredictionRequest):
     """
     Main prediction endpoint with REQUEST BODY

@@ -5,6 +5,7 @@ import os
 
 load_dotenv() # To load  environment variable from.env file 
 
+# need fastapi for all endpoints
 app = FastAPI(
     title = os.getenv("API_NAME" , "FastAPI APP"),
     debug  = os.getenv("DEBUG" , False)
