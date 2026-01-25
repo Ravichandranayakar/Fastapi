@@ -2,11 +2,21 @@
 from fastapi import APIRouter, status
 from schemas.legal import CaseRequest, CaseResponse, FIRRequest, FIRResponse
 
+
+from fastapi import Depends
+from dependencies.Request_id import get_request_id # import dependecies
+
+from dependencies.config import get_settings , Settings # import Config
+
+from dependencies.models import get_legal_model , FakeLegalModel # importing model
+
 # Create a router instance
 router = APIRouter(
     prefix="/legal",      # All routes will start with /legal
-    
-      # Group related endpoints under one path
+    tags=["Legal Analysis"],  # Tag for /docs grouping
+)
+
+ # prifix =  Group related endpoints under one path
 
       # Legal: /legal/analyze, /legal/fir-classify
 
@@ -14,21 +24,43 @@ router = APIRouter(
 
       # Search: /search
       # Instead of everything directly under /analyze, /fir-classify, /users,
-    tags=["Legal Analysis"],  # Tag for /docs grouping
-)
-
-
+      
+      
 @router.post("/analyze", response_model=CaseResponse, status_code=status.HTTP_200_OK)
-def case_analyze(request: CaseRequest):
+def case_analyze(request: CaseRequest ,
+                 request_id : str = Depends(get_request_id),
+                 settings: Settings =  Depends(get_settings),
+                 model: FakeLegalModel = Depends(get_legal_model)
+                 ):
+#---------------------------------------------------------------------#    
+#"This line defines a settings variable that takes the shape of the
+# Settings class, then tells FastAPI to 'go find and run' 
+# the get_settings function to fill that variable with data."
+#----------------------------------------------------------------------#
     """
     Analyze legal case and predict category
     
     This endpoint accepts a case description and returns the predicted
     legal category with confidence score.
     """
+    """
+    Analyze legal case with request id tracking
+    """
+    print(f"processing case analsis for request {request_id}")
+    
+    """
+    Analyze legal case with configurable settings
+    """
+    print(f"[{settings.API_NAME}] processing request: {request_id}") # Just for  my refference i am printing this line 
+    
+    print(f" Using model version: {model.model_version}")
     # Dummy logic (replace with ML model later)
     case_lower = request.case_text.lower()
     
+    # Use settings in logic 
+    if len(request.case_text) > settings.max_prediction_length:
+        print(f" Case text too long! MAX: {settings.max_prediction_length}")
+        
     if "property" in case_lower or "land" in case_lower:
         category = "Property Law"
         confidence = 0.89
@@ -40,7 +72,9 @@ def case_analyze(request: CaseRequest):
         confidence = 0.82
     else:
         category = "General Law"
-        confidence = 0.60
+        confidence = settings.default_confidence_threshold
+    
+    print(f"Completed request {request_id}") # prints request id
     
     return CaseResponse(
         success=True,
@@ -51,12 +85,25 @@ def case_analyze(request: CaseRequest):
 
 
 @router.post("/fir-classify", response_model=FIRResponse, status_code=status.HTTP_200_OK)
-def classify_fir(request: FIRRequest):
+def classify_fir(request: FIRRequest ,
+                 request_id:str = Depends(get_request_id),
+                 settings:Settings = Depends(get_settings),
+                 model : FakeLegalModel = Depends(get_legal_model)
+                 ):
     """
     Classify FIR and predict IPC section
     
     Analyzes crime description and suggests relevant IPC sections.
     """
+    """
+    Classify FIR with request id tracking
+    """
+    
+    print(f"processing FIR classification for request {request_id}")
+    
+    print(f" Using model version: {model.model_version}")
+    
+    crime_type, confidence = model.predict_crime(request.description)
     # Dummy logic (replace with ML model later)
     desc_lower = request.description.lower()
     
@@ -71,7 +118,9 @@ def classify_fir(request: FIRRequest):
         confidence = 0.85
     else:
         crime_type = "IPC General Section"
-        confidence = 0.65
+        confidence = settings.default_confidence_threshold
+    
+    print(f"Completed request {request_id}") # prints request id
     
     return FIRResponse(
         success=True,
