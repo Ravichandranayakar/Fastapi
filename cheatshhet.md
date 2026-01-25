@@ -154,3 +154,80 @@ def predict(req: Request):
 
 
 ***
+###################################################################################
+
+┌─────────────────────────────────────────────────────────┐
+│ 1. BROWSER                                              │
+│    User fills form and clicks "Execute"                 │
+│    JavaScript creates HTTP POST request                 │
+└──────────────────┬──────────────────────────────────────┘
+                   │
+                   ▼
+┌─────────────────────────────────────────────────────────┐
+│ 2. NETWORK                                              │
+│    HTTP POST http://127.0.0.1:8000/FIR-clasify          │
+│    Headers: Content-Type: application/json              │
+│    Body: {"description": "...", ...}                    │
+└──────────────────┬──────────────────────────────────────┘
+                   │
+                   ▼
+┌─────────────────────────────────────────────────────────┐
+│ 3. UVICORN (Server)                                     │
+│    Receives HTTP request                                │
+│    Passes to FastAPI application                        │
+└──────────────────┬──────────────────────────────────────┘
+                   │
+                   ▼
+┌─────────────────────────────────────────────────────────┐
+│ 4. FASTAPI ROUTING                                      │
+│    Matches URL path: /FIR-clasify                       │
+│    Finds endpoint function: fir_analyse()               │
+└──────────────────┬──────────────────────────────────────┘
+                   │
+                   ▼
+┌─────────────────────────────────────────────────────────┐
+│ 5. PYDANTIC VALIDATION                                  │
+│    Tries to create FIRRequest from JSON                 │
+│    Checks: types, lengths, patterns, etc.               │
+│                                                         │
+│    ✓ Valid → Continue                                   |  
+│    ✗ Invalid → Return 422 error (STOP HERE)             │
+└──────────────────┬──────────────────────────────────────┘
+                   │
+                   ▼ (only if validation passed)
+┌─────────────────────────────────────────────────────────┐
+│ 6. YOUR FUNCTION                                        │
+│    def fir_analyse(request: FIRRequest):                │
+│        # Your business logic                            │
+│        return FIRResponse(...)                          │
+└──────────────────┬──────────────────────────────────────┘
+                   │
+                   ▼
+┌─────────────────────────────────────────────────────────┐
+│ 7. RESPONSE MODEL VALIDATION                            │
+│    FastAPI validates your return value                  │
+│    Ensures it matches FIRResponse schema                │
+│    Filters out extra fields (security!)                 │
+└──────────────────┬──────────────────────────────────────┘
+                   │
+                   ▼
+┌─────────────────────────────────────────────────────────┐
+│ 8. JSON SERIALIZATION                                   │
+│    Pydantic model → Python dict → JSON string           │
+└──────────────────┬──────────────────────────────────────┘
+                   │
+                   ▼
+┌─────────────────────────────────────────────────────────┐
+│ 9. HTTP RESPONSE                                        │
+│    Status: 200 OK                                       │
+│    Headers: Content-Type: application/json              │
+│    Body: {"success": true, "Criem_type": "IPC 379"...}  │
+└──────────────────┬──────────────────────────────────────┘
+                   │
+                   ▼
+┌─────────────────────────────────────────────────────────┐
+│ 10. BROWSER                                             │
+│     Displays response in /docs interface                │
+│     Syntax highlighting, formatting, etc.               │
+└─────────────────────────────────────────────────────────┘
+

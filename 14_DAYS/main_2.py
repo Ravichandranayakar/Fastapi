@@ -20,14 +20,14 @@ app = FastAPI(
 
 # ==========Path parameters=======
 
-@app.get('/user/{user_id}')
+@app.get('/user/{user_id}', tags=["User"])
 
 def get_user(
     user_id: int = Path(
         ...,
         description="user ID to fetch",
         gt=0 ,# must be positive and geaterthan 0
-        example = 123
+        examples= 123
     )
 ):
     """
@@ -42,7 +42,7 @@ def get_user(
     
 # ======== Query parameter =======
 
-@app.get("/Search")
+@app.get("/Search" , tags=["Search"])
 
 def search(
     q: str = Query(
@@ -78,7 +78,7 @@ def search(
 # =========== Request Body (POSt) =============
 # health check endpoint  weather app is live or not
 
-@app.post("/predict", response_model = PredictionResponse, status_code = status.HTTP_200_OK)
+@app.post("/predict", tags=["Predict"],response_model = PredictionResponse, status_code = status.HTTP_200_OK)
 def predict(request: PredictionRequest):
     """
     Main prediction endpoint with REQUEST BODY
@@ -120,7 +120,7 @@ def predict_with_path_and_body(
     }
 
 # ============ Error handling ========
-@app.get("/error-demo")
+@app.get("/error-demo" , tags=["Error handling"])
 def error_demo(Should_fail : bool = Query(default=False)):
     """
     Demonstrates custom error handling
@@ -131,7 +131,9 @@ def error_demo(Should_fail : bool = Query(default=False)):
             detail="you set should_fail = True , so here's an error!"
        )
     return{"message" : "No error occurred"}
-@app.get("/health")
+
+
+@app.get("/health" , tags=["health"])
 
 # function that returns the health check in json format 
 def health_check():
@@ -145,7 +147,7 @@ def health_check():
     }
 
 # Root endpoint  for user to provide links to find interactive docs 
-@app.get("/")
+@app.get("/" , tags=["Main"])
 def read_root():
     return {
         "message" : "welcome to BARO AI API",

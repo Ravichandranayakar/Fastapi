@@ -54,7 +54,7 @@ class PredictionResponse(BaseModel):
         
     class config:
         json_schema_extra = {
-            "example" :{
+            "examples" :{
                 "success": True,
                 "prediction" : "Spam",
                 "confidence" : 0.90,
