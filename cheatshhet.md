@@ -93,7 +93,7 @@ def my_endpoint(request: MyRequest):
 
 ## Realistic Learning Plan 
 
-### What You Should Actually Remember:
+### What  Actually Remember:
 
 **Tier 1: Core Concepts (Must Know)**
 - FastAPI uses decorators: `@app.get()`, `@app.post()`
