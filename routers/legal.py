@@ -5,12 +5,21 @@ from schemas.legal import CaseRequest, CaseResponse, FIRRequest, FIRResponse
 # Create a router instance
 router = APIRouter(
     prefix="/legal",      # All routes will start with /legal
+    
+      # Group related endpoints under one path
+
+      # Legal: /legal/analyze, /legal/fir-classify
+
+      # Users: /users/{user_id}
+
+      # Search: /search
+      # Instead of everything directly under /analyze, /fir-classify, /users,
     tags=["Legal Analysis"],  # Tag for /docs grouping
 )
 
 
 @router.post("/analyze", response_model=CaseResponse, status_code=status.HTTP_200_OK)
-def analyze_case(request: CaseRequest):
+def case_analyze(request: CaseRequest):
     """
     Analyze legal case and predict category
     
