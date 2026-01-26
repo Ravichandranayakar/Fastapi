@@ -1,5 +1,5 @@
  ## DAY 1 
-
+```markdown
 [✓] Created venv and activated it
 [✓] Installed FastAPI and Uvicorn
 [✓] Got the server running with --reload
@@ -60,6 +60,4 @@ model: FakeLegalModel = Depends(get_legal_model)
 dependencies=[Depends(verify_api_key)]
  → Protects endpoint, runs before function
 
-
-# DAY 5
-
+```
