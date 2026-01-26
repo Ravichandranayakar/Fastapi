@@ -1,6 +1,5 @@
 ```markdown
 DAY 1
-
 [✓] Created venv and activated it
 [✓] Installed FastAPI and Uvicorn
 [✓] Got the server running with --reload
@@ -42,23 +41,5 @@ DAY 4
 [✓] Tested model loads once and caches
 [✓] Tested authentication with valid/invalid keys
 [✓] No repeated code in endpoints
-
-Summary: Dependencies i Built
-
-1. Request Tracking
-request_id: str = Depends(get_request_id)
- → Generates unique ID per request
-
-2. Configuration
-settings: Settings = Depends(get_settings)
- → Loads .env settings once, caches forever
-
-3. ML Model
-model: FakeLegalModel = Depends(get_legal_model)
- → Loads model once, shares across all requests
-
-4. Authentication
-dependencies=[Depends(verify_api_key)]
- → Protects endpoint, runs before function
 
 ```
