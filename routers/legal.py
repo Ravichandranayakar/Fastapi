@@ -10,6 +10,9 @@ from dependencies.config import get_settings , Settings # import Config
 
 from dependencies.models import get_legal_model , FakeLegalModel # importing model
 
+from dependencies.auth import verify_api_key
+
+
 # Create a router instance
 router = APIRouter(
     prefix="/legal",      # All routes will start with /legal
@@ -26,17 +29,20 @@ router = APIRouter(
       # Instead of everything directly under /analyze, /fir-classify, /users,
       
       
-@router.post("/analyze", response_model=CaseResponse, status_code=status.HTTP_200_OK)
+@router.post("/analyze", response_model=CaseResponse, 
+             dependencies=[Depends(verify_api_key)]) # Protect this endpoint
 def case_analyze(request: CaseRequest ,
                  request_id : str = Depends(get_request_id),
                  settings: Settings =  Depends(get_settings),
-                 model: FakeLegalModel = Depends(get_legal_model)
-                 ):
+                 model: FakeLegalModel = Depends(get_legal_model)):
+    
 #---------------------------------------------------------------------#    
+#settings: Settings =  Depends(get_settings),
 #"This line defines a settings variable that takes the shape of the
 # Settings class, then tells FastAPI to 'go find and run' 
 # the get_settings function to fill that variable with data."
 #----------------------------------------------------------------------#
+
     """
     Analyze legal case and predict category
     
@@ -84,12 +90,12 @@ def case_analyze(request: CaseRequest ,
     )
 
 
-@router.post("/fir-classify", response_model=FIRResponse, status_code=status.HTTP_200_OK)
+@router.post("/fir-classify", response_model=FIRResponse, 
+             dependencies=[Depends(verify_api_key)]) # Protect this endpoint
 def classify_fir(request: FIRRequest ,
                  request_id:str = Depends(get_request_id),
                  settings:Settings = Depends(get_settings),
-                 model : FakeLegalModel = Depends(get_legal_model)
-                 ):
+                 model : FakeLegalModel = Depends(get_legal_model)):
     """
     Classify FIR and predict IPC section
     
@@ -104,6 +110,10 @@ def classify_fir(request: FIRRequest ,
     print(f" Using model version: {model.model_version}")
     
     crime_type, confidence = model.predict_crime(request.description)
+    
+    # use teh settings logic 
+    if len(request.description)>settings.max_prediction_length:
+        print(f"Fir text too long! MAX:{settings.max_prediction_length}")
     # Dummy logic (replace with ML model later)
     desc_lower = request.description.lower()
     
@@ -116,7 +126,7 @@ def classify_fir(request: FIRRequest ,
     elif "fraud" in desc_lower or "cheating" in desc_lower:
         crime_type = "IPC 420 - Cheating"
         confidence = 0.85
-    else:
+    else: 
         crime_type = "IPC General Section"
         confidence = settings.default_confidence_threshold
     

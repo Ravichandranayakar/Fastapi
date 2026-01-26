@@ -1,3 +1,11 @@
+# Path parameter = “which resource?” (must be in URL, required).
+# ​
+
+# Query parameter = “how to filter/sort/configure?” (after ?, usually optional).
+# ​
+
+# Request body = “actual data or big payload” (JSON sent in POST/PUT/PATCH).
+
 # importing reuired libraries
 from fastapi import FastAPI
 from dotenv import load_dotenv

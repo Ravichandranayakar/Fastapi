@@ -231,3 +231,20 @@ def predict(req: Request):
 │     Syntax highlighting, formatting, etc.               │
 └─────────────────────────────────────────────────────────┘
 
+# Summary: Dependencies i Built
+
+# 1. Request Tracking
+request_id: str = Depends(get_request_id)
+# → Generates unique ID per request
+
+# 2. Configuration
+settings: Settings = Depends(get_settings)
+# → Loads .env settings once, caches forever
+
+# 3. ML Model
+model: FakeLegalModel = Depends(get_legal_model)
+# → Loads model once, shares across all requests
+
+# 4. Authentication
+dependencies=[Depends(verify_api_key)]
+# → Protects endpoint, runs before function

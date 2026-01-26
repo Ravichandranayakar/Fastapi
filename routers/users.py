@@ -13,7 +13,7 @@ def get_user(
         ...,
         gt=0,
         description="User ID to fetch",
-        example=123
+        examples=123
     )
 ):
     """

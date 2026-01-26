@@ -11,7 +11,7 @@ load_dotenv()
 
 # Create FastAPI app
 app = FastAPI(
-    title=os.getenv("APP_NAME", "BARO AI"),
+    title=os.getenv("API_NAME", "BARO AI"),
     version="v1",
     description="Legal AI Assistant - Organized with Routers"
 )
@@ -46,6 +46,6 @@ def health_check():
     """Health check endpoint"""
     return {
         "status": "healthy",
-        "app": os.getenv("APP_NAME"),
+        "app": os.getenv("API_NAME"),
         "version": "v1"
     }
