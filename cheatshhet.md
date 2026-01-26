@@ -153,8 +153,7 @@ def predict(req: Request):
 ```
 
 
-***
-###################################################################################
+```markdown
 
 ┌─────────────────────────────────────────────────────────┐
 │ 1. BROWSER                                              │
@@ -230,3 +229,4 @@ def predict(req: Request):
 │     Displays response in /docs interface                │
 │     Syntax highlighting, formatting, etc.               │
 └─────────────────────────────────────────────────────────┘
+```
