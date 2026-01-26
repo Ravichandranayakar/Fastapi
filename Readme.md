@@ -1,11 +1,12 @@
- ## DAY 1 
 ```markdown
+DAY 1
+
 [✓] Created venv and activated it
 [✓] Installed FastAPI and Uvicorn
 [✓] Got the server running with --reload
 [✓] Tested the endpoints and they work!
 
- ## DAY 2
+DAY 2
 
 [✓] Pydantic models created (request + response)
 [✓] Validation works (try invalid data)
@@ -17,7 +18,7 @@
 [✓] Error handling with HTTPException
 [✓] Tested in /docs
 
-## DAy 3
+DAy 3
 
 [✓] Created routers/ folder
 [✓] Created schemas/ folder
@@ -30,7 +31,7 @@
 [✓] /docs shows organized structure
 [✓] Code is scalable and clean
 
-## DAY 4
+DAY 4
 
 [✓] Created dependencies/Request.py (request ID)
 [✓] Created dependencies/config.py (settings)
@@ -42,21 +43,21 @@
 [✓] Tested authentication with valid/invalid keys
 [✓] No repeated code in endpoints
 
-### Summary: Dependencies i Built
+Summary: Dependencies i Built
 
-#### 1. Request Tracking
+1. Request Tracking
 request_id: str = Depends(get_request_id)
  → Generates unique ID per request
 
-#### 2. Configuration
+2. Configuration
 settings: Settings = Depends(get_settings)
  → Loads .env settings once, caches forever
 
-#### 3. ML Model
+3. ML Model
 model: FakeLegalModel = Depends(get_legal_model)
  → Loads model once, shares across all requests
 
-#### 4. Authentication
+4. Authentication
 dependencies=[Depends(verify_api_key)]
  → Protects endpoint, runs before function
 
