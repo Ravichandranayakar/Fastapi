@@ -12,9 +12,9 @@ class FakeLegalModel:
     - model = transformers.AutoModel.from_pretrained("...")
     """
     def __init__(self):
-        print(" Loading Legal AI Model... (this takes time!)")
+        print("Loading Legal AI Model... (this takes time!)")
         time.sleep(2)  # Simulate slow model loading
-        print(" Model loaded successfully!")
+        print("Model loaded successfully!")
         self.model_version = "v1.2.3"
     
     def predict_category(self, text: str) -> tuple[str, float]:

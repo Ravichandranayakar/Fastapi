@@ -59,7 +59,7 @@ def case_analyze(request: CaseRequest ,
     """
     print(f"[{settings.API_NAME}] processing request: {request_id}") # Just for  my refference i am printing this line 
     
-    print(f" Using model version: {model.model_version}")
+    print(f"Using model version: {model.model_version}")
     # Dummy logic (replace with ML model later)
     case_lower = request.case_text.lower()
     
@@ -107,7 +107,7 @@ def classify_fir(request: FIRRequest ,
     
     print(f"processing FIR classification for request {request_id}")
     
-    print(f" Using model version: {model.model_version}")
+    print(f"Using model version: {model.model_version}")
     
     crime_type, confidence = model.predict_crime(request.description)
     

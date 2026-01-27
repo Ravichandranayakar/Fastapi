@@ -19,6 +19,6 @@ def verify_api_key(x_api_key: str = Header(...)) -> str:
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail = "INvalid API key"
         )
-    print(f" valid API key ->{x_api_key}")
+    print(f"valid API key ->{x_api_key}")
     return x_api_key
 
