@@ -6,7 +6,14 @@ import os
 # Import routers
 from routers import legal, users, search
 
-from utils.logger import logger # import logger
+# import logger 
+from utils.logger import logger 
+
+from utils.exceptions import (InvalidAPIKeyException , 
+                              ModelNotLoadedException,
+                              PredictionException,
+                              RateLimitException
+                              )
 
 # Load environment variables
 load_dotenv()
@@ -18,6 +25,8 @@ app = FastAPI(
     description="Legal AI Assistant - Organized with Routers"
 )
 
+#This code defines a startup hook in FastAPI that runs once when 
+#API starts and just prints some log lines using your global
 @app.on_event("startup")
 async def stratup():
     logger.info("="*50)
@@ -25,7 +34,8 @@ async def stratup():
     logger.info("Testing Logger module")
     logger.info("=" * 50)
 
-
+#Async means Python can pause this function 
+# at await points and do other work while it waits.
 
 # ============ INCLUDE ROUTERS ============
 app.include_router(legal.router)
@@ -63,8 +73,49 @@ def health_check():
 @app.get("/Logging", tags={"Logging Test"})
 def test_logger():
     """ Test all log levels"""
-    logger.dubug("this is DEBUG (wont show - level too low )")
+    logger.debug("this is DEBUG (wont show - level too low )")
     logger.info("this is info")
     logger.warning(" This is warning")
     logger.error(":this is ERROR")
     return {"message" : "chcek terminal and logs/app.log"}
+
+# Test endpoint 1: Invalid API key
+
+@app.get("/test-invalid-key")
+def test_invalid_key():
+    """Test Invalidkeyexception"""
+    logger.warning("testing invalide = API key exception")
+    raise InvalidAPIKeyException()
+
+# Test endpoint 2: Model not loaded
+
+@app.get("/test-model-error")
+
+def model_error():
+    """Test ModelLoadedException"""
+    logger.error("testing model loading exception")
+    raise ModelNotLoadedException( detail= "Legal AI model to initialize")
+
+
+# Test endpoint 3: Prediction failed
+@app.get("/test-prediction-error")
+def test_prediction_error():
+    """Test PredictionException"""
+    logger.error("Testing prediction exception")
+    raise PredictionException(detail="Could not classify the legal document")
+
+
+# Test endpoint 4: Rate limit
+@app.get("/test-rate-limit")
+def test_rate_limit():
+    """Test RateLimitException"""
+    logger.warning("Testing rate limit exception")
+    raise RateLimitException()
+
+
+# Test endpoint 5: Custom message
+@app.get("/test-custom-message")
+def test_custom_message():
+    """Test exception with custom message"""
+    logger.warning("Testing custom error message")
+    raise InvalidAPIKeyException(detail="API key 'test-123' is not valid for this endpoint")

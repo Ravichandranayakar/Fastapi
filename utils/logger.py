@@ -7,7 +7,7 @@ from pathlib import Path
 Path("logs").mkdir(exist_ok=True)
 
 
-def setup_logger(name: str = "baro_api") -> logging.Logger:
+def setup_logger(name: str = "baro_api") -> logging.Logger: # type hint
     """
     Setup structured logger with file and console output
     
@@ -49,3 +49,5 @@ def setup_logger(name: str = "baro_api") -> logging.Logger:
 
 # Create global logger instance
 logger = setup_logger()
+
+
