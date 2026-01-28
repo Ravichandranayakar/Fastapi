@@ -60,7 +60,7 @@ def health_check():
         "version": "v1"
     }
 
-@app.get("/Logging", tags={"Logging"})
+@app.get("/Logging", tags={"Logging Test"})
 def test_logger():
     """ Test all log levels"""
     logger.dubug("this is DEBUG (wont show - level too low )")
