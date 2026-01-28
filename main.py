@@ -6,6 +6,8 @@ import os
 # Import routers
 from routers import legal, users, search
 
+from utils.logger import logger # import logger
+
 # Load environment variables
 load_dotenv()
 
@@ -16,6 +18,22 @@ app = FastAPI(
     description="Legal AI Assistant - Organized with Routers"
 )
 
+@app.on_event("startup")
+async def stratup():
+    logger.info("="*50)
+    logger.info("BARO AI API Starting...")
+    logger.info("Testing Logger module")
+    logger.info("=" * 50)
+
+
+@app.get("/")
+def test_logger():
+    """ Test all log levels"""
+    logger.dubug("this is DEBUG (wont show - level too low )")
+    logger.info("this is info")
+    logger.warning(" This is warning")
+    logger.error(":this is ERROR")
+    return {"message" : "chcek terminal and logs/app.log"}
 
 # ============ INCLUDE ROUTERS ============
 app.include_router(legal.router)
