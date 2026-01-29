@@ -43,3 +43,19 @@ DAY 4
 [✓] No repeated code in endpoints
 
 ```
+DAy 5
+
+[✓] Created utils/logger.py (structured logging)
+[✓] Created utils/exceptions.py(customexceptions)
+[✓] Created utils/error_handlers.py (exception handlers)
+[✓] Created middleware/logging.py (request logging)
+[✓] Registered middleware in main.py
+[✓] Registered exception handlers in main.py
+[✓] Updated dependencies to use logger
+[✓] Updated dependencies to use custom exceptions
+[✓] Tested all components individually
+[✓] Tested everything together
+[✓] No Unicode errors (Windows-friendly symbols)
+[✓] Clean error responses (no tracebacks to users)
+[✓] Full error details in logs (for developers)
+[✓] Request timing working (X-Process-Time header)

@@ -9,6 +9,7 @@ from routers import legal, users, search
 # import logger 
 from utils.logger import logger 
 
+#importing exception handler
 from utils.exceptions import (InvalidAPIKeyException , 
                               ModelNotLoadedException,
                               PredictionException,
@@ -16,6 +17,7 @@ from utils.exceptions import (InvalidAPIKeyException ,
                               BaroException
                               )
 
+# importing error handler 
 from fastapi.exceptions import RequestValidationError
 from pydantic import BaseModel, Field
 
@@ -45,6 +47,7 @@ app.add_middleware(LoggingMiddleware)
 app.add_exception_handler(BaroException ,baro_exception_handler)
 app.add_exception_handler(RequestValidationError,validation_exception_handler)
 app.add_exception_handler(Exception , generic_exception_handler)
+
 #This code defines a startup hook in FastAPI that runs once when 
 #API starts and just prints some log lines using your global
 @app.on_event("startup")

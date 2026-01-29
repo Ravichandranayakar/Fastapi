@@ -1,5 +1,7 @@
 # routers/search.py
 from fastapi import APIRouter, Query
+from fastapi import Depends
+from dependencies.Request_id import get_request_id
 
 router = APIRouter(
     prefix="/search",
@@ -16,13 +18,15 @@ def search(
         description="Search query text"
     ),
     page: int = Query(default=1, ge=1, le=100),
-    limit: int = Query(default=10, ge=1, le=100)
+    limit: int = Query(default=10, ge=1, le=100),
+    request_id : str  = Depends(get_request_id)
 ):
     """
     Search cases, users, and legal documents
     
     Returns paginated search results matching the query.
     """
+    print(f" Search -> Request ID: {request_id}")
     return {
         "query": q,
         "page": page,
