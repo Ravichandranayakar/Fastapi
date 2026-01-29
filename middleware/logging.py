@@ -24,14 +24,14 @@ class LoggingMiddleware(BaseHTTPMiddleware):
         client_ip = request.client.host if request.client else "unknown"
         
         # Log incoming request
-        logger.info(f"➡️  {method} {path} | Client: {client_ip}")
+        logger.info(f" {method} {path} | Client: {client_ip}")
         
         # Process request
         try:
             response = await call_next(request)
         except Exception as e:
             # Log if request crashes
-            logger.error(f"❌ Request failed: {method} {path} | Error: {str(e)}")
+            logger.error(f" Request failed: {method} {path} | Error: {str(e)}")
             raise
         
         # Calculate processing time
@@ -42,17 +42,17 @@ class LoggingMiddleware(BaseHTTPMiddleware):
         
         # Color-code by status
         if status_code < 400:
-            emoji = "✅"
+            Symbol = "OK"
             level = "info"
         elif status_code < 500:
-            emoji = "⚠️"
+            Symbol = "!!"
             level = "warning"
         else:
-            emoji = "❌"
+            Symbol = "XX"
             level = "error"
         
         log_message = (
-            f"{emoji} {method} {path} | "
+            f"{Symbol} {method} {path} | "
             f"Status: {status_code} | "
             f"Time: {process_time:.3f}s"
         )

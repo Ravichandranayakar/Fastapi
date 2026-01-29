@@ -12,8 +12,21 @@ from utils.logger import logger
 from utils.exceptions import (InvalidAPIKeyException , 
                               ModelNotLoadedException,
                               PredictionException,
-                              RateLimitException
+                              RateLimitException,
+                              BaroException
                               )
+
+from fastapi.exceptions import RequestValidationError
+from pydantic import BaseModel, Field
+
+from utils.error_handlers import (
+     baro_exception_handler,
+     validation_exception_handler,
+     generic_exception_handler
+     
+ )
+
+from middleware.logging import LoggingMiddleware
 
 # Load environment variables
 load_dotenv()
@@ -25,6 +38,13 @@ app = FastAPI(
     description="Legal AI Assistant - Organized with Routers"
 )
 
+# ================= Register middleware =================
+app.add_middleware(LoggingMiddleware) 
+
+#================ Exception handler ======================
+app.add_exception_handler(BaroException ,baro_exception_handler)
+app.add_exception_handler(RequestValidationError,validation_exception_handler)
+app.add_exception_handler(Exception , generic_exception_handler)
 #This code defines a startup hook in FastAPI that runs once when 
 #API starts and just prints some log lines using your global
 @app.on_event("startup")
@@ -56,10 +76,13 @@ def root():
             "legal_analysis": "/legal/analyze",
             "fir_classification": "/legal/fir-classify",
             "user_info": "/users/{user_id}",
-            "search": "/search?q=query"
+            "search": "/search?q=query",
+            "Logging test" :"/logging",
+            "exception" : "/exception",
+            "error handler" : "/use each functions path"
         }
     }
-
+ 
 
 @app.get("/health", tags=["Main"])
 def health_check():
@@ -70,6 +93,8 @@ def health_check():
         "version": "v1"
     }
 
+
+#========= Logging and exceptions ============================
 @app.get("/Logging", tags={"Logging Test"})
 def test_logger():
     """ Test all log levels"""
@@ -81,7 +106,7 @@ def test_logger():
 
 # Test endpoint 1: Invalid API key
 
-@app.get("/test-invalid-key")
+@app.get("/test-invalid-key" , tags=["Exceptions"])
 def test_invalid_key():
     """Test Invalidkeyexception"""
     logger.warning("testing invalide = API key exception")
@@ -89,7 +114,7 @@ def test_invalid_key():
 
 # Test endpoint 2: Model not loaded
 
-@app.get("/test-model-error")
+@app.get("/test-model-error" ,  tags=["Exceptions"])
 
 def model_error():
     """Test ModelLoadedException"""
@@ -98,7 +123,7 @@ def model_error():
 
 
 # Test endpoint 3: Prediction failed
-@app.get("/test-prediction-error")
+@app.get("/test-prediction-error" ,  tags=["Exceptions"])
 def test_prediction_error():
     """Test PredictionException"""
     logger.error("Testing prediction exception")
@@ -106,7 +131,7 @@ def test_prediction_error():
 
 
 # Test endpoint 4: Rate limit
-@app.get("/test-rate-limit")
+@app.get("/test-rate-limit", tags=["Exceptions"])
 def test_rate_limit():
     """Test RateLimitException"""
     logger.warning("Testing rate limit exception")
@@ -114,8 +139,45 @@ def test_rate_limit():
 
 
 # Test endpoint 5: Custom message
-@app.get("/test-custom-message")
+@app.get("/test-custom-message" ,  tags=["Exceptions"])
 def test_custom_message():
     """Test exception with custom message"""
     logger.warning("Testing custom error message")
     raise InvalidAPIKeyException(detail="API key 'test-123' is not valid for this endpoint")
+
+#================== with error handler ==============================
+
+# Test 1: Custom exception (InvalidAPIKey)
+@app.get("/test-invalid-key" , tags=["Using Error handler"])
+def test_invalid_key():
+    """Test InvalidAPIKeyException with handler"""
+    logger.warning("Testing invalid API key exception")
+    raise InvalidAPIKeyException()
+
+
+# Test 2: Custom exception with custom message
+@app.get("/test-model-error" ,tags=["Using Error handler"])
+def test_model_error():
+    """Test ModelNotLoadedException with handler"""
+    logger.error("Testing model loading exception")
+    raise ModelNotLoadedException(detail="Legal AI model failed to initialize")
+
+
+# Test 3: Validation error (Pydantic)
+class TestRequest(BaseModel):
+    case_text: str = Field(..., min_length=10, max_length=100)
+    urgency: str = Field(..., pattern="^(low|medium|high)$")
+
+@app.post("/test-validation" ,tags=["Using Error handler"])
+def test_validation(data: TestRequest):
+    """Test validation error with handler"""
+    return {"message": "Validation passed!", "data": data}
+
+
+# Test 4: Unhandled exception (division by zero)
+@app.get("/test-crash" , tags=["Using Error handler"])
+def test_crash():
+    """Test unhandled exception (should be caught by generic handler)"""
+    logger.info("About to crash...") # stores all logs what message printed in terminal in app.log
+    result = 1 / 0  # ZeroDivisionError
+    return {"result": result}

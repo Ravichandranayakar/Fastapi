@@ -1,3 +1,5 @@
+#Coustemm logger formatter this decides how each logs will show the results 
+
 # utils/logger.py
 import logging
 import sys
