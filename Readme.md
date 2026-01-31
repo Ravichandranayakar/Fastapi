@@ -61,8 +61,6 @@ DAy 5
 
 DAY 6
 
-Here’s Day 6 in the same style.
-
 - [✓] Added `startup_event` to load resources when the app starts  
 - [✓] Added `shutdown_event` to clean up resources when the app stops  
 - [✓] Imported and used `FakeLegalModel` in `main.py`  
