@@ -1,5 +1,5 @@
 # main.py
-from fastapi import FastAPI
+from fastapi import FastAPI , Request
 from dotenv import load_dotenv
 import os
 
@@ -17,6 +17,7 @@ from utils.exceptions import (InvalidAPIKeyException ,
                               BaroException
                               )
 
+
 # importing error handler 
 from fastapi.exceptions import RequestValidationError
 from pydantic import BaseModel, Field
@@ -29,6 +30,8 @@ from utils.error_handlers import (
  )
 
 from middleware.logging import LoggingMiddleware
+
+from dependencies.models import FakeLegalModel
 
 # Load environment variables
 load_dotenv()
@@ -48,14 +51,68 @@ app.add_exception_handler(BaroException ,baro_exception_handler)
 app.add_exception_handler(RequestValidationError,validation_exception_handler)
 app.add_exception_handler(Exception , generic_exception_handler)
 
+#============== Lifespan events =====================================
+@app.on_event("startup")
+
+async def startup_event():
+    """
+    Runs ONCE when server starts
+    
+    WHY: Load heavy resources before first request
+    WHAT: ML models, database connections, caches
+    WHEN: Server startup (before accepting requests)
+    """
+    logger.info("=" * 60)
+    logger.info(">> BARO AI API Starting...")
+    logger.info("   Version: v1.0")
+    logger.info(f"  Environment: {os.getenv('DEBUG', 'production')}")
+    logger.info("=" * 60)
+    
+    # Load ML Model
+    logger.info(">> Loading ML Model...")
+    try:
+        app.state.legal_model = FakeLegalModel()
+        logger.info(f"OK Model loaded! Version: {app.state.legal_model.model_version}")
+    except Exception as e:
+        logger.error(f"XX Failed to load model: {str(e)}")
+        raise  # Stop server if model fails to load
+    
+    logger.info("=" * 60)
+    logger.info("OK BARO AI API Ready!")
+    logger.info("=" * 60)
+
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    """
+    Runs ONCE when server stops
+    
+    WHY: Cleanup resources gracefully
+    WHAT: Close connections, save state, log shutdown
+    WHEN: Server shutdown (Ctrl+C or crash)
+    """
+    logger.info("=" * 60)
+    logger.info("XX BARO AI API Shutting Down...")
+    logger.info("Cleaning up resources...")
+    
+    # Cleanup model (if needed)
+    if hasattr(app.state, "legal_model"):
+        logger.info("   Unloading ML model...")
+        del app.state.legal_model
+    
+    logger.info("OK Shutdown complete!")
+    logger.info("=" * 60)
+
+
+#=====================================================================
 #This code defines a startup hook in FastAPI that runs once when 
 #API starts and just prints some log lines using your global
-@app.on_event("startup")
-async def stratup():
-    logger.info("="*50)
-    logger.info("BARO AI API Starting...")
-    logger.info("Testing Logger module")
-    logger.info("=" * 50)
+# @app.on_event("startup")
+# async def stratup():
+#     logger.info("="*50)
+#     logger.info("BARO AI API Starting...")
+#     logger.info("Testing Logger module")
+#     logger.info("=" * 50)
 
 #Async means Python can pause this function 
 # at await points and do other work while it waits.
@@ -88,12 +145,15 @@ def root():
  
 
 @app.get("/health", tags=["Main"])
-def health_check():
+def health_check(request : Request):
     """Health check endpoint"""
+    model_loaded = hasattr(request.app.state , "legal_model")
+    model_version = request.app.state.legal_model.model_version if model_loaded  else "N/A"
     return {
         "status": "healthy",
         "app": os.getenv("API_NAME"),
-        "version": "v1"
+        "Model loaded": True,
+        "Model version" : "v1.2.3"
     }
 
 
