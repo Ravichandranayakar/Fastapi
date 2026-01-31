@@ -42,7 +42,6 @@ DAY 4
 [✓] Tested authentication with valid/invalid keys
 [✓] No repeated code in endpoints
 
-```
 DAy 5
 
 [✓] Created utils/logger.py (structured logging)
@@ -76,3 +75,4 @@ Here’s Day 6 in the same style.
 - [✓] Confirmed startup logs show model loading once with version info  
 - [✓] Confirmed shutdown logs show model unload/cleanup
 
+```
