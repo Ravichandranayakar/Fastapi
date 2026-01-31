@@ -61,16 +61,16 @@ DAy 5
 
 DAY 6
 
-- [✓] Added `startup_event` to load resources when the app starts  
-- [✓] Added `shutdown_event` to clean up resources when the app stops  
-- [✓] Imported and used `FakeLegalModel` in `main.py`  
-- [✓] Created a single `FakeLegalModel` instance in `startup_event`  
-- [✓] Stored the model in `app.state.legal_model` for global access   
-- [✓] Updated `/legal/analyze` to accept `Request` and use `request.app.state.legal_model`  
-- [✓] Confirmed model is not re-created per request (no “Loading Legal AI Model…” in request logs)  
-- [✓] Verified `/legal/analyze` runs in milliseconds (~0.02s) instead of ~2 seconds  
-- [✓] Kept using the existing dummy `FakeLegalModel` (no real ML model yet)  
-- [✓] Confirmed startup logs show model loading once with version info  
-- [✓] Confirmed shutdown logs show model unload/cleanup
+[✓] Added `startup_event` to load resources when the app starts  
+[✓] Added `shutdown_event` to clean up resources when the app stops  
+[✓] Imported and used `FakeLegalModel` in `main.py`  
+[✓] Created a single `FakeLegalModel` instance in `startup_event`  
+[✓] Stored the model in `app.state.legal_model` for global access   
+[✓] Updated `/legal/analyze` to accept `Request` and use `request.app.state.legal_model`  
+[✓] Confirmed model is not re-created per request (no “Loading Legal AI Model…” in request logs)  
+[✓] Verified `/legal/analyze` runs in milliseconds (~0.02s) instead of ~2 seconds  
+[✓] Kept using the existing dummy `FakeLegalModel` (no real ML model yet)  
+[✓] Confirmed startup logs show model loading once with version info  
+[✓] Confirmed shutdown logs show model unload/cleanup
 
 ```
