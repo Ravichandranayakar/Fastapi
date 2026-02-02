@@ -47,7 +47,7 @@ class CaseResponse(BaseModel):
                 "success" : True,
                 "Crime_type" : "IPC 379",
                 "confidence" : 1.0,
-                "Serverity" : "high"
+                "Serverity" : "midium"
             }
         }
  
