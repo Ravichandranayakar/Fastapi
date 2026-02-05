@@ -73,4 +73,14 @@ DAY 6
 [✓] Confirmed startup logs show model loading once with version info  
 [✓] Confirmed shutdown logs show model unload/cleanup
 
+DAY 7
+
+[✓] Kept ML model (`FakeLegalModel`) **synchronous** (no fake async inside the model)
+[✓] Exposed async-capable behavior at the API layer (FastAPI handling multiple requests quickly)
+[✓] Confirmed `/legal/analyze` and `/legal/fir-classify` both use the **already-loaded model** (no extra “Loading Legal AI    Model…” in request logs) 
+[✓] Verified FIR classification requests finish in **milliseconds** (`0.003s`, `0.008s`) with correct logging around model usage  
+[✓] Confirmed validation test endpoint `/test-validation` returns `200` rapidly on repeated calls (no blocking or slowdown) 
+[✓] Ensured no long blocking operations (`time.sleep`, heavy CPU) are directly in async request flow; heavy work is inside sync functions that run fast per call 
+[✓] Observed that multiple requests (`fir-classify`, `test-validation`) execute smoothly without serial blocking, showing correct async/sync usage at this stage
+
 ```

@@ -14,6 +14,8 @@ from dependencies.auth import verify_api_key
 
 from utils.logger import logger
 from pydantic import BaseModel , Field
+
+from fastapi.concurrency import run_in_threadpool
 # Create a router instance
 router = APIRouter(
     prefix="/legal",      # All routes will start with /legal
@@ -36,7 +38,8 @@ class CaseAnalysisRequest(BaseModel):
     
 @router.post("/analyze", response_model=CaseResponse, 
              dependencies=[Depends(verify_api_key)]) # Protect this endpoint
-def case_analyze(request: CaseRequest ,
+async def case_analyze(request: CaseRequest ,
+                        body: CaseAnalysisRequest,
                  request_M : Request,
                  request_id : str = Depends(get_request_id),
                  settings: Settings =  Depends(get_settings),
@@ -50,8 +53,14 @@ def case_analyze(request: CaseRequest ,
                 logger.info(f"   Model version: {model.model_version}")
                 
                 # use the model
-                category , confidence = model.predict_category(request_body.case_text)
+                #category , confidence = model.predict_category(request_body.case_text)
                 
+                # Run blocking prediction in threadpool 
+                # so it doesn't block the event loop
+                category, confidence = await run_in_threadpool(
+                model.predict_category,
+                body.case_text,
+                 )
 #---------------------------------------------------------------------#    
 #settings: Settings =  Depends(get_settings),
 #"This line defines a settings variable that takes the shape of the
