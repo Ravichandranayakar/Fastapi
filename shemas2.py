@@ -7,13 +7,13 @@ class CaseRequest(BaseModel):
     description:str = Field(
         ...,
         min_length= 1,
-        max_length= 500,
+        max_length= 600,
         description= "ADd Description here"
     ),
     location:str = Field(
         ...,
         min_length=1,
-        max_length=20,
+        max_length=25,
         description="crime location"
     
     ),
