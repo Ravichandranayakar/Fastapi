@@ -9,7 +9,7 @@ class PredictionRequest(BaseModel):
     text : str = Field(
         ...,
         min_length=1,
-        max_length=1000,
+        max_length=2000,
         description="Text input for prediction"
     )
     model_version_threshold: Optional[str] = Field(
