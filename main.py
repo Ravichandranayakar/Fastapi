@@ -14,8 +14,7 @@ from utils.exceptions import (InvalidAPIKeyException ,
                               ModelNotLoadedException,
                               PredictionException,
                               RateLimitException,
-                              BaroException
-                              )
+                              BaroException)
 
 
 # importing error handler 
