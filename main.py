@@ -90,7 +90,7 @@ async def shutdown_event():
     WHAT: Close connections, save state, log shutdown
     WHEN: Server shutdown (Ctrl+C or crash)
     """
-    logger.info("=" * 60)
+    logger.info("=" * 80)
     logger.info("XX BARO AI API Shutting Down...")
     logger.info("Cleaning up resources...")
     
@@ -100,7 +100,7 @@ async def shutdown_event():
         del app.state.legal_model
     
     logger.info("OK Shutdown complete!")
-    logger.info("=" * 60)
+    logger.info("=" * 80)
 
 
 #=====================================================================
