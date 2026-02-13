@@ -49,7 +49,7 @@ class LoggingMiddleware(BaseHTTPMiddleware):
             level = "warning"
         else:
             Symbol = "XX"
-            level = "error"
+            level = "Error"
         
         log_message = (
             f"{Symbol} {method} {path} | "
