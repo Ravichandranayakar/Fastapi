@@ -227,7 +227,7 @@ def test_model_error():
 
 # Test 3: Validation error (Pydantic)
 class TestRequest(BaseModel):
-    case_text: str = Field(..., min_length=10, max_length=100)
+    case_text: str = Field(..., min_length=20, max_length=100)
     urgency: str = Field(..., pattern="^(low|medium|high)$")
 
 @app.post("/test-validation" ,tags=["Using Error handler"])
