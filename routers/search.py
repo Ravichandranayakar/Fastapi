@@ -18,7 +18,7 @@ def search(
         description="Search query text"
     ),
     page: int = Query(default=1, ge=1, le=100),
-    limit: int = Query(default=10, ge=1, le=100),
+    limit: int = Query(default=100, ge=1, le=100),
     request_id : str  = Depends(get_request_id)
 ):
     """
