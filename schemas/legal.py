@@ -54,7 +54,7 @@ class FIRRequest(BaseModel):
     )
     location: str = Field(
         ...,
-        min_length=2,
+        min_length=8,
         max_length=100,
         description="Location where crime occurred"
     )
@@ -86,7 +86,7 @@ class FIRResponse(BaseModel):
             "example": {
                 "success": True,
                 "crime_type": "IPC 379 - Theft",
-                "confidence": 0.92,
+                "confidence": 0.98,
                 "severity": "medium"
             }
         }
