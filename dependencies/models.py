@@ -32,13 +32,13 @@ class FakeLegalModel:
             text_lower = text.lower()
         
             if "property" in text_lower:
-                return "Property Law", 0.89
+                return "Property Law", 0.80
             elif "contract" in text_lower:
-                return "Contract Law", 0.85
+                return "Contract Law", 0.80
             elif "family" in text_lower or "divorce" in text_lower:
-                return "Family Law", 0.82
+                return "Family Law", 0.80
             else:
-                return "General Law", 0.60
+                return "General Law", 0.80
         except Exception as e:
             logger.error(f"XX Prediction failed:{str(e)}")
             raise PredictionException("case prediction failed")
