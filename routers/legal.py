@@ -14,8 +14,13 @@ from dependencies.auth import verify_api_key
 
 from utils.logger import logger
 from pydantic import BaseModel , Field
-
 from fastapi.concurrency import run_in_threadpool
+
+from fastapi import APIRouter, UploadFile,File,Request
+from fastapi.concurrency import run_in_threadpool
+import csv
+from io import StringIO
+
 # Create a router instance
 router = APIRouter(
     prefix="/legal",      # All routes will start with /legal
@@ -165,3 +170,43 @@ def classify_fir(request: FIRRequest ,
         confidence=confidence,
         severity=request.severity
     )
+
+###########################################
+
+@router.post("/legal/predict_batch")
+async def predict_batch(
+    file : UploadFile = File(...), request: Request = None):
+    """
+    TEMP: Dummy batch endpoint.
+    - Echoes the crime text from CSV.
+    - Returns a fixed 'General Law' label and 0.8 confidence as placeholders.
+    """
+    model = request.app.state.legal_model
+    contents = await file.read()
+    decoded = contents.decode("utf-8")
+    
+    reader = csv.DictReader(StringIO(decoded))
+    
+    results = []
+    
+    for row in reader:
+        text = row.get("Crime Type")
+        
+        if not text:
+            continue
+        
+        
+        category, confidence = await run_in_threadpool(
+            model.predict_category,
+            text)
+        
+        results.append({
+            "case__text" : text[:50] , 
+            "category":category,
+            "confidence" :confidence
+        })
+     
+    return{
+        "total_processed": len(results),
+        "results" : results
+    }   
