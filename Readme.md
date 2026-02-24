@@ -88,25 +88,15 @@ Day 8
 – File Upload & Batch Inference 
 
 [✓] Added UploadFile, File import to routers/legal.py
-
 [✓] Created /legal/predict_batch endpoint accepting CSV upload
-
 [✓] Used contents = await file.read() to stream file contents
-
 [✓] Parsed CSV with csv.DictReader(StringIO(decoded))
-
 [✓] Looped through rows, extracted case_text from each
-
 [✓] Ran model.predict_category via await run_in_threadpool() for each row
-
 [✓] Returned {"total_processed": N, "results": [...]} structure
-
 [✓] Tested with small CSV (5 rows) → correct predictions returned
-
 [✓] Tested with 100+ rows → observed timing, no blocking
-
 [✓] Validated wrong file type (non-CSV) handled gracefully
-
 [✓] Confirmed batch endpoint uses request.app.state.legal_model (Day 6 integration)
 
 DAY 9 
@@ -116,7 +106,7 @@ DAY 9
 [✓] CRUD works (INSERT → SELECT verified)
 [✓] Real-time data persistence across requests
 [✓] Schema migration understood (DROP → auto-recreate)
-[✓] psql commands mastered
+[✓] psql commands basics 
 
 ```
 

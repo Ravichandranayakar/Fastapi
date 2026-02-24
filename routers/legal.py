@@ -1,5 +1,5 @@
 # routers/legal.py
-from fastapi import APIRouter, status , Request
+from fastapi import APIRouter, status , Request, HTTPException
 from schemas.legal import CaseRequest, CaseResponse, FIRRequest, FIRResponse
 
 
@@ -229,3 +229,67 @@ def test_db( case_text:str , db:Session = Depends(get_db)):
     db.commit()
     db.refresh(pred)
     return {"saved ID":pred.id}
+
+
+# another type of code for databases only for understanding 
+@router.post("/legal/predict")
+async def predict_case(
+    body: CaseAnalysisRequest,
+    request: Request,
+    db: Session = Depends(get_db)
+):
+    model = request.app.state.legal_model
+
+    category, confidence = await run_in_threadpool(
+        model.predict_category,
+        body.case_text
+    )
+
+    prediction = Prediction(
+        case_text=body.case_text,
+        category=category,
+        confidence=confidence,
+        model_version="v1.2.3"
+    )
+
+    db.add(prediction)
+    db.commit()
+    db.refresh(prediction)
+
+    return {
+        "category": category,
+        "confidence": confidence
+    }
+    
+    
+# fecth the history 
+
+@router.get("/legal/history")
+def get_history(
+    limit: int = 10,
+    db: Session = Depends(get_db)):
+    records = db.query(Prediction)\
+                .order_by(Prediction.created_at.desc())\
+                .limit(limit)\
+                .all()
+
+    return records
+
+# to delet endpoint 
+
+@router.delete("/legal/history/{prediction_id}")
+def delete_prediction(
+    prediction_id: int,
+    db: Session = Depends(get_db)
+):
+    record = db.query(Prediction)\
+               .filter(Prediction.id == prediction_id)\
+               .first()
+
+    if not record:
+        raise HTTPException(status_code=404, detail="Not found")
+
+    db.delete(record)
+    db.commit()
+
+    return {"message": "Deleted"}
