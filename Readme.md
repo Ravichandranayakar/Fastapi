@@ -109,6 +109,15 @@ Day 8
 
 [✓] Confirmed batch endpoint uses request.app.state.legal_model (Day 6 integration)
 
+DAY 9 
+
+[✓] DB connected (PostgreSQL + SQLAlchemy)
+[✓] Data stored (5 predictions saved!)
+[✓] CRUD works (INSERT → SELECT verified)
+[✓] Real-time data persistence across requests
+[✓] Schema migration understood (DROP → auto-recreate)
+[✓] psql commands mastered
+
 ```
 
 

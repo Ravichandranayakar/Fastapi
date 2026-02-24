@@ -32,6 +32,8 @@ from middleware.logging import LoggingMiddleware
 
 from dependencies.models import FakeLegalModel
 
+from core.database import engine , Base
+from models.predictions import Prediction
 # Load environment variables
 load_dotenv()
 
@@ -243,3 +245,6 @@ def test_crash():
     logger.info("About to crash...") # stores all logs what message printed in terminal in app.log
     result = 1 / 0  # ZeroDivisionError
     return {"result": result}
+
+
+Base.metadata.create_all(bind = engine) # creates table automaticlay

@@ -21,6 +21,11 @@ from fastapi.concurrency import run_in_threadpool
 import csv
 from io import StringIO
 
+# adding database for the Prediction model
+from core.dependencies import get_db
+from sqlalchemy.orm import Session
+from models.predictions import Prediction
+
 # Create a router instance
 router = APIRouter(
     prefix="/legal",      # All routes will start with /legal
@@ -210,3 +215,17 @@ async def predict_batch(
         "total_processed": len(results),
         "results" : results
     }   
+######################################################################### 
+# code for database
+
+@router.post("/test-db")
+def test_db( case_text:str , db:Session = Depends(get_db)):
+    pred = Prediction(case_text = case_text,
+                      category = "Test",
+                      confidence = 0.95,
+                      model_version = "v1.0")
+    
+    db.add(pred)
+    db.commit()
+    db.refresh(pred)
+    return {"saved ID":pred.id}
