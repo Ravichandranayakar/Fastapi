@@ -26,6 +26,10 @@ from core.dependencies import get_db
 from sqlalchemy.orm import Session
 from models.predictions import Prediction
 
+
+from core.security import verify_api_key
+from fastapi import Depends
+
 # Create a router instance
 router = APIRouter(
     prefix="/legal",      # All routes will start with /legal
@@ -236,8 +240,8 @@ def test_db( case_text:str , db:Session = Depends(get_db)):
 async def predict_case(
     body: CaseAnalysisRequest,
     request: Request,
-    db: Session = Depends(get_db)
-):
+    db: Session = Depends(get_db),
+    api_key : str = Depends(verify_api_key)):
     model = request.app.state.legal_model
 
     category, confidence = await run_in_threadpool(
