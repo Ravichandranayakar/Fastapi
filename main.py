@@ -34,6 +34,8 @@ from dependencies.models import FakeLegalModel
 
 from core.database import engine , Base
 from models.predictions import Prediction
+
+from routers import auth , legal
 # Load environment variables
 load_dotenv()
 
@@ -118,10 +120,21 @@ async def shutdown_event():
 #Async means Python can pause this function 
 # at await points and do other work while it waits.
 
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 # ============ INCLUDE ROUTERS ============
 app.include_router(legal.router)
 app.include_router(users.router)
 app.include_router(search.router)
+app.include_router(auth.router)
+app.include_router(legal.router)
 
 
 # ============ ROOT & HEALTH ENDPOINTS ============

@@ -7,3 +7,5 @@ Test_APIs.md
 cheatsheet.md
 __pycache__/
 logs/
+venv/
+env/

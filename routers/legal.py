@@ -27,8 +27,11 @@ from sqlalchemy.orm import Session
 from models.predictions import Prediction
 
 
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
+from core.dependencies import get_db
 from core.security import verify_api_key
-from fastapi import Depends
+from core.auth import get_current_user
 
 # Create a router instance
 router = APIRouter(
@@ -241,7 +244,8 @@ async def predict_case(
     body: CaseAnalysisRequest,
     request: Request,
     db: Session = Depends(get_db),
-    api_key : str = Depends(verify_api_key)):
+    api_key : str = Depends(verify_api_key),
+    current_user: dict = Depends(get_current_user),):
     model = request.app.state.legal_model
 
     category, confidence = await run_in_threadpool(
@@ -271,7 +275,10 @@ async def predict_case(
 @router.get("/legal/history")
 def get_history(
     limit: int = 10,
-    db: Session = Depends(get_db)):
+    db: Session = Depends(get_db),
+    api_key : str = Depends(verify_api_key),
+    current_user : dict =  Depends(get_current_user)
+):  # sourcery skip: inline-immediately-returned-variable
     records = db.query(Prediction)\
                 .order_by(Prediction.created_at.desc())\
                 .limit(limit)\
@@ -297,3 +304,4 @@ def delete_prediction(
     db.commit()
 
     return {"message": "Deleted"}
+
