@@ -257,7 +257,7 @@ async def predict_case(
         case_text=body.case_text,
         category=category,
         confidence=confidence,
-        model_version="v1.2.3"
+        model_version="v1.2.4"
     )
 
     db.add(prediction)
