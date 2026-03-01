@@ -36,6 +36,11 @@ from core.database import engine , Base
 from models.predictions import Prediction
 
 from routers import auth , legal
+
+from core.limiter import limiter
+from slowapi.middleware import SlowAPIMiddleware
+from slowapi.errors import RateLimitExceeded
+from fastapi.responses import JSONResponse
 # Load environment variables
 load_dotenv()
 
@@ -136,6 +141,13 @@ app.include_router(search.router)
 app.include_router(auth.router)
 app.include_router(legal.router)
 
+# aading rate limiter instance 
+app.state.limiter = limiter
+app.add_middleware(SlowAPIMiddleware)
+
+# Limiter → tracks request counts
+# get_remote_address → identifies client by IP
+# Middleware → intercepts requests globally
 
 # ============ ROOT & HEALTH ENDPOINTS ============
 @app.get("/", tags=["Main"])
@@ -239,7 +251,16 @@ def test_model_error():
     logger.error("Testing model loading exception")
     raise ModelNotLoadedException(detail="Legal AI model failed to initialize")
 
-
+#######################################
+# Rate limti handler
+@app.exception_handler(RateLimitExceeded)
+def rate_limit_handler(request ,exc):
+    return JSONResponse( 
+        status_code = 429,
+        content = {"detail": "Rate limit exceeded. Try again later"})
+    #429 = HTTP standard for too many requests.
+    #Never expose raw error trace.
+ ############################################   
 # Test 3: Validation error (Pydantic)
 class TestRequest(BaseModel):
     case_text: str = Field(..., min_length=20, max_length=100)
@@ -261,3 +282,17 @@ def test_crash():
 
 
 Base.metadata.create_all(bind = engine) # creates table automaticlay
+
+#Global Request Size Limit (Production)
+from starlette.middleware.base import BaseHTTPMiddleware
+class MaxBodySizeMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request, call_next):
+        # 1024*10 = 10 kb
+        max_body_size = 1024*1024*10 # 10kb, for mb 1024*1024*10 = 10mb 
+        
+        body = await request.body()
+        if len(body) > max_body_size:
+            return JSONResponse( status_code=413, content={"detail" :"paylaod too large"})
+        return await call_next(request)
+    
+app.add_middleware(MaxBodySizeMiddleware)

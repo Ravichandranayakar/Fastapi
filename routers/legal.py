@@ -33,6 +33,12 @@ from core.dependencies import get_db
 from core.security import verify_api_key
 from core.auth import get_current_user
 
+from core.limiter import limiter
+from slowapi import Limiter
+from slowapi.util import get_remote_address
+from fastapi import Request
+import bleach
+
 # Create a router instance
 router = APIRouter(
     prefix="/legal",      # All routes will start with /legal
@@ -240,12 +246,14 @@ def test_db( case_text:str , db:Session = Depends(get_db)):
 
 # another type of code for databases only for understanding 
 @router.post("/legal/predict")
+@limiter.limit("5/minute")
 async def predict_case(
     body: CaseAnalysisRequest,
     request: Request,
     db: Session = Depends(get_db),
     api_key : str = Depends(verify_api_key),
     current_user: dict = Depends(get_current_user),):
+    clean_text = bleach.clean(body.case_text)
     model = request.app.state.legal_model
 
     category, confidence = await run_in_threadpool(
