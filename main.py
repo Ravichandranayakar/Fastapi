@@ -288,7 +288,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 class MaxBodySizeMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request, call_next):
         # 1024*10 = 10 kb
-        max_body_size = 1024*1024*10 # 10kb, for mb 1024*1024*10 = 10mb 
+        max_body_size = 1024*1024*10 # for mb 1024*1024*10 = 10mb 
         
         body = await request.body()
         if len(body) > max_body_size:

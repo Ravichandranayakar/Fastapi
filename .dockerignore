@@ -1,0 +1,25 @@
+# Git + Docs (even if committed)
+.git
+.gitignore
+README.md
+
+# Dev/IDE
+.vscode/
+.idea/
+*.swp
+
+# Tests/Coverage
+tests/
+coverage/
+pytest_*
+
+# Logs
+logs/
+*.log
+
+# Already in image
+**/venv
+**/node_modules
+
+# Source maps
+*.js.map
