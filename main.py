@@ -260,7 +260,7 @@ def rate_limit_handler(request ,exc):
         content = {"detail": "Rate limit exceeded. Try again later"})
     #429 = HTTP standard for too many requests.
     #Never expose raw error trace.
- ############################################   
+ ###################################################################  
 # Test 3: Validation error (Pydantic)
 class TestRequest(BaseModel):
     case_text: str = Field(..., min_length=20, max_length=100)
