@@ -23,5 +23,10 @@ EXPOSE 8000
 #CMD ["uvicorn", "main:app","--host" ,"0.0.0.0" ,"--port" ,"8000"]
 
 # multiple uvicorn wokers
-COPY gunicorn_config.py .
-CMD ["gunicorn","main:app", "-c", "gunicorn_config.py"]
+# if we careted file for gunicorn so we use this 
+#COPY gunicorn_config.py .
+#CMD ["gunicorn","main:app", "-c", "gunicorn_config.py"]
+
+# if file is not created so we use this direct cmd 
+
+CMD ["gunicorn", "main:app", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:10000", "--workers", "1"]
