@@ -30,5 +30,5 @@ EXPOSE 8000
 #its ignoreing the file while bulding so we used direct command
 # if file is not created so we use this direct cmd 
 
-CMD ["gunicorn", "main:app", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:10000", "--workers", "1"]
+CMD [gunicorn main:app -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT --workers 1]
 
