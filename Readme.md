@@ -155,8 +155,3 @@ Live: https://synthforge-fastapi-com.onrender.com/docs
 uvicorn main:app --host 0.0.0.0 --port $PORT
 
 ```
-```
-
-
-
-
