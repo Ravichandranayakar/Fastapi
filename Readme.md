@@ -108,6 +108,25 @@ DAY 9
 [✓] Schema migration understood (DROP → auto-recreate)
 [✓] psql commands basics 
 
+Day 10 
+[✓] API key protection on /legalpredict (requires X-API-Key predictionmodel)
+[✓] JWT login at /auth/login (username: admin, password: admin)
+[✓] Protected /legalhistory (requires both API key + JWT Bearer token)
+[✓] CORS middleware added in main.py
+[✓] Swagger shows lock icons and Authorize button
+​
+Day 11 
+[✓] Rate limiting on prediction endpoint (5/minute using slowapi)
+[✓] Input sanitization with bleach for case text
+[✓] Payload size limits via Pydantic Field(max_length=...)
+[✓] Global 429 handler for rate limit exceeded
+
+Day 12
+[✓] Multi-stage Dockerfile created (builder + runtime)
+[✓] Container runs with docker run -p 8000:8000 --env-file .env baro-api
+[✓] Gunicorn + Uvicorn workers (CMD gunicorn main:app -k uvicorn.workers.UvicornWorker --workers 2)
+[✓] Environment variables passed correctly (JWT_SECRET, API_KEY, DATABASE_URL)
+
 ```
 
 
