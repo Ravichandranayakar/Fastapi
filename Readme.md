@@ -138,6 +138,23 @@ Day 13 (After Deploy):
  [✓] /auth/login returns JWT
  [✓] /legalpredict requires API key
 
+ Day 14 – Final Hardening & Review
+ Metrics endpoint
+
+text
+# BARO AI - Legal Assistant
+Live: https://synthforge-fastapi-com.onrender.com/docs
+
+## Endpoints
+- POST /legalpredict
+- GET /legal/fir-classify
+- POST /auth/login
+
+## Deploy
+```bash
+uvicorn main:app --host 0.0.0.0 --port $PORT
+
+```
 ```
 
 
