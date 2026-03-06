@@ -170,7 +170,7 @@ def root():
     }
  
 
-@app.get("/health", tags=["Main"])
+@app.get("/api/health", tags=["Main"])
 def health_check(request : Request):
     """Health check endpoint"""
     model_loaded = hasattr(request.app.state , "legal_model")
