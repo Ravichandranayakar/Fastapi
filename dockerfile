@@ -19,5 +19,9 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 COPY . .
 
 EXPOSE 8000
+# single uvicorn = 1 request at a time 
+#CMD ["uvicorn", "main:app","--host" ,"0.0.0.0" ,"--port" ,"8000"]
 
-CMD ["uvicorn", "main:app","--host" ,"0.0.0.0" ,"--port" ,"8000"]
+# multiple uvicorn wokers
+COPY gunicorn_config.py . 
+CMD ["gunicorn","main:app", "-c", "gunicorn_config.py"]
