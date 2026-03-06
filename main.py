@@ -296,3 +296,12 @@ class MaxBodySizeMiddleware(BaseHTTPMiddleware):
         return await call_next(request)
     
 app.add_middleware(MaxBodySizeMiddleware)
+
+@app.get("/metrics")
+def metrics():
+    return {
+        "service": "BARO AI API",
+        "status": "running",
+        "version": "1.0",
+        "environment": "production"
+    }
