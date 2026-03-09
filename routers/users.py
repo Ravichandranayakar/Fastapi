@@ -15,7 +15,7 @@ def get_user(
         ...,
         gt=0,
         description="User ID to fetch",
-        examples=123 ,
+        examples=334 ,
     ),
     request_id: str = Depends(get_request_id)
 ):
