@@ -175,7 +175,7 @@ def classify_fir(request: FIRRequest ,
         confidence = 0.88
     elif "fraud" in desc_lower or "cheating" in desc_lower:
         crime_type = "IPC 420 - Cheating"
-        confidence = 0.85
+        confidence = 0.95
     else: 
         crime_type = "IPC General Section"
         confidence = settings.default_confidence_threshold
