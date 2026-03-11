@@ -14,7 +14,7 @@ def search(
     q: str = Query(
         ...,
         min_length=1,
-        max_length=100,
+        max_length=1000,
         description="Search query text"
     ),
     page: int = Query(default=1, ge=1, le=100),
