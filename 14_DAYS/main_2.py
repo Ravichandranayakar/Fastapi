@@ -56,7 +56,7 @@ def search(
     q: str = Query(
         ...,
         min_length=1 ,
-        max_length=100,
+        max_length=1000,
         description="Search query"
     ),
     page: int  = Query(
