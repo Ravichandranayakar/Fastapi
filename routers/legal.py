@@ -119,7 +119,7 @@ async def case_analyze(request: CaseRequest ,
         
                 if "property" in case_lower or "land" in case_lower:
                     category = "Property Law"
-                    confidence = 0.89
+                    confidence = 0.85
                 elif "contract" in case_lower or "agreement" in case_lower:
                     category = "Contract Law"
                     confidence = 0.85
